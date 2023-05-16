@@ -5,32 +5,33 @@ public class fin {
 	busc_ciudad bc = new busc_ciudad();
 	LeerParametros lp = new LeerParametros();
 
-	public int fin() {
+	public boolean fin() {
 
-		int fi = 0;
+		boolean fi = false;
 		
 		//System.out.println(vacuna.getALFA() + ", " + vacuna.getBETA() + ", " + vacuna.getDELTA() + ", " + vacuna.getGAMA());
 		
-		if (vacuna.Alfa == 90) {
+		if (Puntuaciaons_Pandemic.getVacunas() == 4) {
 			System.out.println("Has ganado");
-			fi = 1;
-		}
-		
-		if (vacuna.getALFA() == 90) {
-			System.out.println("Has ganado");
-			fi = 1;
+			fi = true;
 		}
 
 		if (bc.contarInfecciones() > lp.EnfActDerrota || bc.contarBrotes() > lp.NumBroDerrota) {
 			System.out.println("Has Perdido pringado");
-			fi = 1;
-			FinGame FG = new FinGame();
-			//FG.main(null);
-		
+			fi = true;		
 		}
 
 		return fi;
 
+	}
+	
+	public static String resultado() {
+		
+		String resu = "T";
+		
+		//GuardarBD.resultado = resu;
+		
+		return resu;
 	}
 
 }

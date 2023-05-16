@@ -13,6 +13,7 @@ public class main {
 		// hace referencia a las clases
 				P_Ciudades ciudades = new P_Ciudades();
 				P_Virus virus = new P_Virus();
+				mouse m = new mouse();
 				
 				
 				// ejecuta GenerarCiudades de la clase ciudades
@@ -25,7 +26,7 @@ public class main {
 			public void run() {
 				try {
 					Toolkit toolkit = Toolkit.getDefaultToolkit();
-					Cursor cursor = toolkit.createCustomCursor(toolkit.getImage("src/mouseimg/char.png"), new Point(0, 0), "Logo");
+					Cursor cursor = toolkit.createCustomCursor(toolkit.getImage(m.imgmouse(0)), new Point(0, 0), "Logo");
 					MenuInterfaz frame = new MenuInterfaz();
 					frame.setCursor(cursor);
 					frame.setVisible(true);

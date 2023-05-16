@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.RoundRectangle2D;
+import java.util.ArrayList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextPane;
@@ -29,14 +30,19 @@ import java.awt.Toolkit;
 
 public class Play extends JFrame {
 
+	static int NPoke = 0;
+
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+
+		mouse m = new mouse();
 
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					Toolkit toolkit = Toolkit.getDefaultToolkit();
-					Cursor cursor = toolkit.createCustomCursor(toolkit.getImage("src/mouseimg/char.png"), new Point(0, 0), "Logo");
+					Cursor cursor = toolkit.createCustomCursor(toolkit.getImage(m.imgmouse(NPoke)), new Point(0, 0),
+							"Logo");
 					Play frame = new Play();
 					frame.setCursor(cursor);
 					frame.setVisible(true);
@@ -54,7 +60,8 @@ public class Play extends JFrame {
 	boolean ver2 = true;
 	LeerParametros P = new LeerParametros();
 	ciudad_infectada ci = new ciudad_infectada();
-	musica m =new musica();
+	FinGame fg = new FinGame();
+	musica m = new musica();
 	private JPanel contentPanel;
 
 	// es una clase para poder redondear el boton
@@ -102,10 +109,11 @@ public class Play extends JFrame {
 		boolean[] visible = new boolean[50];
 		busc_ciudad bc = new busc_ciudad();
 		VacunasPor Vacuna = new VacunasPor();
+		mouse mouse = new mouse();
 		fin f = new fin();
 
 		setFont(new Font("Times New Roman", Font.PLAIN, 29));
-		setIconImage(Toolkit.getDefaultToolkit().getImage("C:\\Users\\oriol\\Pictures\\logo smbf.png"));
+		setIconImage(Toolkit.getDefaultToolkit().getImage(mouse.IconImg(NPoke)));
 		setBackground(Color.BLACK);
 		setTitle("PANDEMIC");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -118,7 +126,7 @@ public class Play extends JFrame {
 		contentPanel.setLayout(null);
 
 		m.playmusica();
-		
+
 		// es el panel general va debajo de todo
 		JPanel panel_general = new JPanel();
 		panel_general.setBorder(new LineBorder(new Color(15, 255, 177), 6, true));
@@ -1368,46 +1376,39 @@ public class Play extends JFrame {
 		class ActualizarBtn {
 
 			private void actualizarVisibilidadBotones() {
+			    int c = 0;
+			    do {
+			        ciudad_infectada e = bc.CiudadInfectada.get(c);
 
-				int c = 0;
+			        if (e.getInfeccion() >= 1 || (e.getInfeccion() == 0 && visible[c])) {
+			            visible[c] = true;
+			        } else if (e.getInfeccion() == 0 || !visible[c]) {
+			            visible[c] = false;
+			        }
+			        c++;
+			    } while (c < visible.length);
 
-				do {
-					ciudad_infectada e = bc.CiudadInfectada.get(c);
-					System.out.println(e.getNumCiudad() + ", " + e.getCiudad() + " , " + c + ": " + visible[c] + " , "
-							+ e.getInfeccion());
+			    c = 0;
+			    System.out.println("\n");
+			    do {
+			        for (int i = 0; i < btn.length && c < visible.length; i++) {
+			            btn[i].setVisible(visible[c]);
+			            c++;
+			        }
+			    } while (c < visible.length);
 
-					if (e.getInfeccion() >= 1 || (e.getInfeccion() == 0 && visible[c] == true)) {
-						visible[c] = true;
-					} else if (e.getInfeccion() == 0 || visible[c] == false) {
-						visible[c] = false;
-					}
-					c++;
-//					System.out.println(e.getNumCiudad() + ", " + e.getCiudad() + " , " + c + ": " + visible[c] + " , "
-//							+ e.getInfeccion());
-				} while (c < 49);
-
-				c = 0;
-				System.out.println("\n");
-				do {
-					for (int i = 0; i < btn.length; i++) {
-						btn[i].setVisible(visible[c]);
-						// System.out.println(c + ":   " + visible[c]);
-						// System.out.println(i + ": " + btn[i]);
-						c++;
-					}
-				} while (c < 49);
-
-				for (int i = 0; i < btn.length; i++) {
-					btn[i].setVisible(visible[i]);
-				}
+			    for (int i = 0; i < btn.length && i < visible.length; i++) {
+			        btn[i].setVisible(visible[i]);
+			    }
 			}
+
 		}
 
 		if (ronda == 1) {
 
 			int c = 0;
 
-			for (int i = 0; i < bc.CiudadInfectada.size(); i++) {
+			for (int i = 0; i < 49; i++) {
 				ciudad_infectada e = bc.CiudadInfectada.get(i);
 
 				if (e.getInfeccion() >= 1) {
@@ -1415,7 +1416,8 @@ public class Play extends JFrame {
 				} else if (e.getInfeccion() == 0) {
 					visible[i] = false;
 				}
-				//System.out.println(e.getNumCiudad() + ", " + e.getCiudad() + " , " + i + ": " + visible[i]);
+				// System.out.println(e.getNumCiudad() + ", " + e.getCiudad() + " , " + i + ": "
+				// + visible[i]);
 			}
 
 			System.out.println("\n");
@@ -1423,7 +1425,7 @@ public class Play extends JFrame {
 			do {
 				for (int i = 0; i < btn.length; i++) {
 					btn[i].setVisible(visible[c]);
-					//System.out.println(c + ":   " + visible[c]);
+					// System.out.println(c + ": " + visible[c]);
 					// System.out.println(i + ": " + btn[i]);
 					c++;
 				}
@@ -1433,44 +1435,59 @@ public class Play extends JFrame {
 
 		}
 
-		// ==============================================================================================================================================================================================================================================================================
-		// ==============================================================================================================================================================================================================================================================================
-
-		JTextPane txtpnPuebloPaleta = new JTextPane();
-		txtpnPuebloPaleta.setForeground(new Color(0, 0, 255));
-		txtpnPuebloPaleta.setFont(new Font("Times New Roman", Font.PLAIN, 33));
-		txtpnPuebloPaleta.setText(
-				"    01:      02:      03:      04:      05:      06:      07:      08:      09:      10:      11:      12:      13:      ");
-		txtpnPuebloPaleta.setBackground(new Color(0, 0, 0));
-		txtpnPuebloPaleta.setBounds(9, 10, 1241, 41);
-		cura.add(txtpnPuebloPaleta);
-
-		JTextPane txtpnPuebloPaleta_1 = new JTextPane();
-		txtpnPuebloPaleta_1.setText(
-				"    14:      15:      16:      17:      18:      19:      20:      21:      22:      23:      24:      25:      26:      ");
-		txtpnPuebloPaleta_1.setForeground(new Color(255, 0, 0));
-		txtpnPuebloPaleta_1.setFont(new Font("Times New Roman", Font.PLAIN, 33));
-		txtpnPuebloPaleta_1.setBackground(Color.BLACK);
-		txtpnPuebloPaleta_1.setBounds(9, 50, 1241, 41);
-		cura.add(txtpnPuebloPaleta_1);
-
-		JTextPane txtpnPuebloPaleta_1_1 = new JTextPane();
-		txtpnPuebloPaleta_1_1.setText(
-				"     27:       28:       29:       30:       31:       32:       33:       34:       35:       36:       37:       38:       ");
-		txtpnPuebloPaleta_1_1.setForeground(new Color(255, 128, 0));
-		txtpnPuebloPaleta_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 33));
-		txtpnPuebloPaleta_1_1.setBackground(Color.BLACK);
-		txtpnPuebloPaleta_1_1.setBounds(9, 90, 1241, 41);
-		cura.add(txtpnPuebloPaleta_1_1);
-
-		JTextPane txtpnPuebloPaleta_1_1_1 = new JTextPane();
-		txtpnPuebloPaleta_1_1_1.setText(
-				"     39:       40:       41:       42:       43:       44:       45:       46:       47:       48:       49:       50:       ");
-		txtpnPuebloPaleta_1_1_1.setForeground(new Color(0, 255, 0));
-		txtpnPuebloPaleta_1_1_1.setFont(new Font("Times New Roman", Font.PLAIN, 33));
-		txtpnPuebloPaleta_1_1_1.setBackground(Color.BLACK);
-		txtpnPuebloPaleta_1_1_1.setBounds(9, 129, 1241, 47);
-		cura.add(txtpnPuebloPaleta_1_1_1);
+		JTextPane txtpnInfoCiudades = new JTextPane();
+		txtpnInfoCiudades.setEditable(false);
+		// INTRODUZCO EL TEXTO PARA QUE SALGA LA CIUDAD
+		txtpnInfoCiudades.setText("\r\n   ");
+		txtpnInfoCiudades.setForeground(Color.white);
+		txtpnInfoCiudades.setFont(new Font("Times New Roman", Font.PLAIN, 50));
+		txtpnInfoCiudades.setBackground(Color.BLACK);
+		txtpnInfoCiudades.setBounds(19, 87, 372, 92);
+		cura.add(txtpnInfoCiudades);
+		
+		JTextPane txtpnInfoINFECCION = new JTextPane();
+		txtpnInfoINFECCION.setEditable(false);
+		txtpnInfoINFECCION.setText("\r\n   ");
+		txtpnInfoINFECCION.setForeground(Color.WHITE);
+		txtpnInfoINFECCION.setFont(new Font("Times New Roman", Font.PLAIN, 50));
+		txtpnInfoINFECCION.setBackground(Color.BLACK);
+		txtpnInfoINFECCION.setBounds(402, 87, 266, 92);
+		cura.add(txtpnInfoINFECCION);
+		
+		JTextPane txtpnInfoBRTOES = new JTextPane();
+		txtpnInfoBRTOES.setEditable(false);
+		txtpnInfoBRTOES.setText("\r\n   ");
+		txtpnInfoBRTOES.setForeground(Color.WHITE);
+		txtpnInfoBRTOES.setFont(new Font("Times New Roman", Font.PLAIN, 50));
+		txtpnInfoBRTOES.setBackground(Color.BLACK);
+		txtpnInfoBRTOES.setBounds(713, 87, 191, 92);
+		cura.add(txtpnInfoBRTOES);
+		
+		JTextPane txtpnInfoVIRUS = new JTextPane();
+		txtpnInfoVIRUS.setEditable(false);
+		txtpnInfoVIRUS.setText("\r\n   ");
+		txtpnInfoVIRUS.setForeground(Color.WHITE);
+		txtpnInfoVIRUS.setFont(new Font("Times New Roman", Font.PLAIN, 50));
+		txtpnInfoVIRUS.setBackground(Color.BLACK);
+		txtpnInfoVIRUS.setBounds(956, 87, 194, 92);
+		cura.add(txtpnInfoVIRUS);
+		
+		JTextPane txtpnInfoCiudad = new JTextPane();
+		txtpnInfoCiudad.setEditable(false);
+		txtpnInfoCiudad.setText(" |    NOMBRE CIUDADES    |  NUM INFECCIONES  |  NUM BROTES  |  NOMBRE VIRUS  |");
+		txtpnInfoCiudad.setForeground(Color.WHITE);
+		txtpnInfoCiudad.setFont(new Font("Times New Roman", Font.PLAIN, 30));
+		txtpnInfoCiudad.setBackground(Color.BLACK);
+		txtpnInfoCiudad.setBounds(9, 11, 1222, 77);
+		cura.add(txtpnInfoCiudad);
+		
+		JTextPane txtpnInfoCiudades_1 = new JTextPane();
+		txtpnInfoCiudades_1.setText("\r\n   ");
+		txtpnInfoCiudades_1.setForeground(Color.WHITE);
+		txtpnInfoCiudades_1.setFont(new Font("Times New Roman", Font.PLAIN, 50));
+		txtpnInfoCiudades_1.setBackground(Color.BLACK);
+		txtpnInfoCiudades_1.setBounds(9, 87, 1222, 92);
+		cura.add(txtpnInfoCiudades_1);
 
 		// ==============================================================================================================================================================================================================================================================================
 		// ==============================================================================================================================================================================================================================================================================
@@ -1587,21 +1604,44 @@ public class Play extends JFrame {
 		Action1.setLayout(null);
 
 		JButton btnCura = new JButton("");
+		btnCura.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCura2.png")));
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCura1.png")));
+			}
+		});
 		btnCura.setContentAreaFilled(false);
 		btnCura.setBorderPainted(false);
 		btnCura.setBorder(null);
 		btnCura.setBackground(null);
-		btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btnCura.png")));
-		btnCura.setBounds(36, 45, 378, 108);
+		btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCura1.png")));
+		btnCura.setBounds(15, 11, 469, 165);
 		Action1.add(btnCura);
 
 		JButton btnVacuna = new JButton("");
+		btnVacuna.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCrearVac2.png")));
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCrearVac1.png")));
+			}
+		});
 		btnVacuna.setContentAreaFilled(false);
 		btnVacuna.setBorderPainted(false);
 		btnVacuna.setBorder(null);
 		btnVacuna.setBackground(null);
-		btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btnVacuna.png")));
-		btnVacuna.setBounds(469, 45, 378, 108);
+		btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCrearVac1.png")));
+		btnVacuna.setBounds(496, 10, 372, 165);
 		Action1.add(btnVacuna);
 
 		JToggleButton tglbtnEye = new JToggleButton("");
@@ -1611,18 +1651,74 @@ public class Play extends JFrame {
 				if (tglbtnEye.isSelected()) {
 					// Si el botón de alternancia está seleccionado, actualizar la posición y tamaño
 					// de los componentes
-					btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btnCura2.png")));
-					btnCura.setBounds(107, 11, 468, 166);
-					btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btnCura2.png")));
-					btnVacuna.setBounds(696, 11, 468, 165);
+					btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/CuraEnf1.png")));
+					btnCura.setBounds(20, 11, 660, 166);
+					btnCura.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/CuraEnf2.png")));
+						}
+
+						@Override
+						public void mouseExited(MouseEvent e) {
+							btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/CuraEnf1.png")));
+						}
+					});
+					btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/CrearVac1.png")));
+					btnVacuna.setBounds(700, 11, 523, 165);
+					btnVacuna.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/CrearVac2.png")));
+						}
+
+						@Override
+						public void mouseExited(MouseEvent e) {
+							btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/CrearVac1.png")));
+						}
+					});
 					Action1.setBounds(0, 568, 1241, 187);
 				} else {
 					// Si el botón de alternancia no está seleccionado, restaurar la posición y
 					// tamaño predeterminados de los componentes
-					btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btnCura.png")));
-					btnCura.setBounds(36, 45, 378, 108);
-					btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btnVacuna.png")));
-					btnVacuna.setBounds(469, 45, 378, 108);
+					btnCura.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCura2.png")));
+						}
+
+						@Override
+						public void mouseExited(MouseEvent e) {
+							btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCura1.png")));
+						}
+					});
+					btnCura.setContentAreaFilled(false);
+					btnCura.setBorderPainted(false);
+					btnCura.setBorder(null);
+					btnCura.setBackground(null);
+					btnCura.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCura1.png")));
+					btnCura.setBounds(15, 11, 469, 165);
+					Action1.add(btnCura);
+
+					btnVacuna.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseEntered(MouseEvent e) {
+							btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCrearVac2.png")));
+
+						}
+
+						@Override
+						public void mouseExited(MouseEvent e) {
+							btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCrearVac1.png")));
+						}
+					});
+					btnVacuna.setContentAreaFilled(false);
+					btnVacuna.setBorderPainted(false);
+					btnVacuna.setBorder(null);
+					btnVacuna.setBackground(null);
+					btnVacuna.setIcon(new ImageIcon(Play.class.getResource("/play/btn/btnCrearVac1.png")));
+					btnVacuna.setBounds(496, 10, 372, 165);
+					Action1.add(btnVacuna);
 					Action1.setBounds(352, 568, 889, 187);
 				}
 			}
@@ -1636,6 +1732,7 @@ public class Play extends JFrame {
 				vacuna.setVisible(ver);
 				btnAtras.setVisible(false);
 				cura.setVisible(false);
+				tglbtnEye.setVisible(true);
 				if (!cura.isVisible() && btciu == true) {
 					btciu = false;
 				}
@@ -1660,35 +1757,41 @@ public class Play extends JFrame {
 		btnAtras.setIcon(new ImageIcon(Play.class.getResource("/play/atras1.png")));
 		btnAtras.setBounds(363, 518, 84, 47);
 
+		// Botón vacunas
 		btnVacuna.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Action1.setVisible(ver);
+				// Al llegar la vacuna al 100% deshabilita el botón
 				if (Vacuna.Alfa == 100) {
-					if (f.fin() == 1) {
+					// Si es la ultima vacuna, al completarla ganas el juego
+					if (f.fin() == true) {
 						System.out.println("Has Ganado");
-						dispose();	
+						dispose();
 					}
 					btnAlfa.setEnabled(false);
 				}
 				if (Vacuna.Beta == 100) {
-					if (f.fin() == 1) {
+					// Si es la ultima vacuna, al completarla ganas el juego
+					if (f.fin() == true) {
 						System.out.println("Has Ganado");
-						dispose();	
+						dispose();
 					}
 					btnBeta.setEnabled(false);
 				}
 				if (Vacuna.Delta == 100) {
-					if (f.fin() == 1) {
+					// Si es la ultima vacuna, al completarla ganas el juego
+					if (f.fin() == true) {
 						System.out.println("Has Ganado");
-						dispose();	
+						dispose();
 					}
 					btnDelta.setEnabled(false);
 				}
 				if (Vacuna.Gama == 100) {
-					if (f.fin() == 1) {
+					// Si es la ultima vacuna, al completarla ganas el juego
+					if (f.fin() == true) {
 						System.out.println("Has Ganado");
-						dispose();	
+						dispose();
 					}
 					btnGama.setEnabled(false);
 				}
@@ -1719,6 +1822,18 @@ public class Play extends JFrame {
 		// ==============================================================================================================================================================================================================================================================================
 
 		panel_general.add(btnAtras);
+
+		JButton Guardar = new JButton("New button");
+		Guardar.addMouseListener(new MouseAdapter() {
+			
+			public void mouseClicked(MouseEvent e) {
+				GuardarBD.baseDeDatos();
+			}
+		});
+		Guardar.setIcon(new ImageIcon(Play.class.getResource("/musica/cambiar.png")));
+		Guardar.setBounds(470, 520, 89, 40);
+		panel_general.add(Guardar);
+
 		tglbtnEye.setContentAreaFilled(false);
 		tglbtnEye.setBorder(null);
 		tglbtnEye.setBorderPainted(false);
@@ -1788,13 +1903,13 @@ public class Play extends JFrame {
 				btnAtras.setVisible(false);
 				tglbtnEye.setVisible(true);
 
-				if (f.fin() == 1) {
-					System.out.println("Has Ganado");
-
+				if (f.fin() == true) {
+					fg.ver = true;
+					FinGame.i = NPoke;
+					FinGame.mainfin();
+					// System.out.println(NPoke);
 					dispose();
-
 				}
-
 			}
 		});
 		btnBeta.addActionListener(new ActionListener() {
@@ -1814,9 +1929,11 @@ public class Play extends JFrame {
 				btnAtras.setVisible(false);
 				tglbtnEye.setVisible(true);
 
-				if (f.fin() == 1) {
-					System.out.println("Has Ganado");
-
+				if (f.fin() == true) {
+					fg.ver = true;
+					FinGame.i = NPoke;
+					FinGame.mainfin();
+					// System.out.println(NPoke);
 					dispose();
 
 				}
@@ -1839,9 +1956,11 @@ public class Play extends JFrame {
 				btnAtras.setVisible(false);
 				tglbtnEye.setVisible(true);
 
-				if (f.fin() == 1) {
-					System.out.println("Has Ganado");
-
+				if (f.fin() == true) {
+					fg.ver = true;
+					FinGame.i = NPoke;
+					FinGame.mainfin();
+					// System.out.println(NPoke);
 					dispose();
 
 				}
@@ -1863,7 +1982,16 @@ public class Play extends JFrame {
 				Action1.setVisible(true);
 				btnAtras.setVisible(false);
 				tglbtnEye.setVisible(true);
+				if (f.fin() == true) {
+					fg.ver = true;
+					FinGame.i = NPoke;
+					FinGame.mainfin();
+					// System.out.println(NPoke);
+					dispose();
+
+				}
 			}
+
 		});
 
 		for (int i = 0; i < btn.length; i++) {
@@ -1871,9 +1999,24 @@ public class Play extends JFrame {
 			int N = i;
 
 			btn[i].addMouseListener(new MouseAdapter() {
+			    @Override
+			    public void mouseEntered(MouseEvent e) {
+					String[] info = bc.getCiuInfo(N);
+			        txtpnInfoCiudades.setText(" " + info[0]);  // Por ejemplo, accediendo al primer elemento del arreglo
+			        txtpnInfoINFECCION.setText("         " + info[1]);
+					txtpnInfoBRTOES.setText("      " + info[2]);
+					txtpnInfoVIRUS.setText("     " + info[3]);
+			    }
 
 				@Override
+				public void mouseExited(MouseEvent e) {
+					txtpnInfoCiudades.setText("\r\n   ");
+			        txtpnInfoINFECCION.setText("\r\n   ");
+					txtpnInfoBRTOES.setText("\r\n   ");
+					txtpnInfoVIRUS.setText("\r\n   ");
+				}
 
+				@Override
 				public void mouseClicked(MouseEvent e) {
 
 					if (btciu == true) {
@@ -1884,7 +2027,7 @@ public class Play extends JFrame {
 							visible[N] = false;
 						}
 
-						System.out.println("Boton Apretado");
+						// System.out.println("Boton Apretado");
 						btn[N].setIcon(new ImageIcon(Play.class.getResource("/ciudades/circulo2.png")));
 						NumAcc++;
 						txtpnInfo.setText(" Nº Infeccion: " + busc_ciudad.contarInfecciones() + "   Nº Brotes: "
@@ -1905,9 +2048,11 @@ public class Play extends JFrame {
 						Action1.setVisible(true);
 						btciu = false;
 
-						if (f.fin() == 1) {
-							System.out.println("Has Perdido");
-
+						if (f.fin() == true) {
+							fg.ver = true;
+							FinGame.i = NPoke;
+							FinGame.mainfin();
+							// System.out.println(NPoke);
 							dispose();
 
 						}
@@ -2010,6 +2155,5 @@ public class Play extends JFrame {
 				vacuna.setVisible(false);
 			}
 		});
-
 	}
 }

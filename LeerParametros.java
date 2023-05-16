@@ -44,7 +44,7 @@ public class LeerParametros {
 						Node hijo = hijos.item(j);
 						if (hijo.getNodeType() == Node.ELEMENT_NODE) {
 							Element ehijo = (Element) hijo;
-							System.out.println("Propiedad: " + hijo.getNodeName() + " valor: " + hijo.getTextContent());
+							//System.out.println("Propiedad: " + hijo.getNodeName() + " valor: " + hijo.getTextContent());
 						}
 
 					}
@@ -92,7 +92,7 @@ public class LeerParametros {
 			StreamResult result = new StreamResult(new File("parametros.xml"));
 			transformer.transform(source, result);
 
-			System.out.println("Archivo XML actualizado con éxito");
+			System.out.println("Archivo XML actualizado con éxito \n\n");
 
 		} catch (Exception e) {
 			e.printStackTrace();

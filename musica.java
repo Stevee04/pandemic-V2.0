@@ -18,7 +18,7 @@ public class musica {
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
 			// Cambiar el volumen a la mitad
-			gainControl.setValue(-22.0f); // -6dB equivale a la mitad del volumen
+			gainControl.setValue(-10.0f); // -6dB equivale a la mitad del volumen
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
@@ -48,7 +48,7 @@ public class musica {
 			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
 			// Cambiar el volumen a la mitad
-			gainControl.setValue(-12.0f); // -6dB equivale a la mitad del volumen
+			gainControl.setValue(-0.0f); // -6dB equivale a la mitad del volumen
 
 		} catch (Exception ex) {
 			ex.printStackTrace();

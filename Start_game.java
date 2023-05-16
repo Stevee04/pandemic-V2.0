@@ -1,6 +1,7 @@
 
 
 public class Start_game {
+	static int cont = 0;
 
 	public static void Start(int Infeccion) {
 		// TODO Auto-generated method stub
@@ -8,19 +9,18 @@ public class Start_game {
 		busc_ciudad bc = new busc_ciudad();
 
 		bc.SaveInfCiu(Infeccion);
-
+		cont ++;
+		System.out.println("Contador rondas: " + cont);
+		GuardarBD.rondas = cont;
 	}
 
+	
+	// pruebas
 	public static void main(String[] args) {
 		
-		int c = 0;
+		LeerParametros P = new LeerParametros();
 		
-		do {
-			for (int i = 0; i <= 50; i++) {
-				System.out.println(c);
-				System.out.println(i);
-				c++;
-			}
-		}while (c < 50);
+		P.editar(3);
+		Start_game.Start(P.CiuInfInicio);
 	}
 }

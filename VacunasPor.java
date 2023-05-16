@@ -6,6 +6,7 @@ public class VacunasPor {
 	int Beta = 0;
 	int Delta = 0;
 	int Gama = 0;
+	int repetir[] = {0,0,0,0};
 	
 	public int getALFA() {
 		return Alfa;
@@ -47,21 +48,37 @@ public class VacunasPor {
 	
 	public ImageIcon getAlfaImage() {
 		String imagePath ="/play/loadAlfa/Alfa"+Alfa+".png";
+		if (Alfa == 100 && repetir[0] != 1) {
+			Puntuaciaons_Pandemic.vacunasNum = 1;
+			repetir[0] = 1;
+		}
 		return new ImageIcon(Play.class.getResource(imagePath));
 	}
 	
 	public ImageIcon getBetaImage() {
 		String imagePath = "/play/loadBeta/Beta"+Beta+".png";
+		if (Beta == 100 && repetir[1] != 1) {
+			Puntuaciaons_Pandemic.vacunasNum = 1;
+			repetir[1] = 1;
+		}
 		return new ImageIcon(Play.class.getResource(imagePath));
 	}
 	
 	public ImageIcon getDeltaImage() {
 		String imagePath ="/play/loadDelta/Delta"+Delta+".png";
+		if (Delta == 100 && repetir[2] != 1) {
+			Puntuaciaons_Pandemic.vacunasNum = 1;
+			repetir[2] = 1;
+		}
 		return new ImageIcon(Play.class.getResource(imagePath));
 	}
 	
 	public ImageIcon getGamaImage() {
 		String imagePath ="/play/loadGama/Gama"+Gama+".png";
+		if (Gama == 100 && repetir[3] != 1) {
+			Puntuaciaons_Pandemic.vacunasNum = 1;
+			repetir[3] = 1;
+		}
 		return new ImageIcon(Play.class.getResource(imagePath));
 	}
 

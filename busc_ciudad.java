@@ -8,7 +8,7 @@ public class busc_ciudad {
 	VacunasPor vac = new VacunasPor();
 	static String ciudades = "ciutats.txt";
 	static String VirusCiudades = "ciudades_enefermedad.bin";
-	static ArrayList<ciudad_infectada> CiudadInfectada = new ArrayList<>();
+	public static ArrayList<ciudad_infectada> CiudadInfectada = new ArrayList<>();
 	static String[] PartesFrase;
 	static String[] CiuInf;
 	static String[] partesCiudades = null;
@@ -18,10 +18,9 @@ public class busc_ciudad {
 
 	public void SaveInfCiu(int InRonda) {
 		int infeccion_actual = 0;
+		int brotes_actual = 0;
 
 		CiuInf = new String[InRonda];
-
-		GuardarArray();
 
 		int[] a = new int[InRonda];
 
@@ -32,18 +31,43 @@ public class busc_ciudad {
 				ciudad_infectada e = CiudadInfectada.get(a[j]);
 				infeccion_actual = e.getInfeccion();
 				if (infeccion_actual == 3) {
+					brotes_actual = e.getBrote();
+					e.setBrote(brotes_actual + 1);
+					System.out.println(brotes_actual);
 					NPueblo = e.getCiudad();
+					System.out.println(NPueblo);
 					InfeccionColindantes();
 				} else {
+					System.out.println(e.getCiudad() + ", " + e.getInfeccion() + ", " + e.getBrote());
 					e.setInfeccion(infeccion_actual + 1);
-
 					System.out.println(CiudadInfectada.get(a[j]));
+					System.out.println(e.getCiudad() + ", " + e.getInfeccion() + ", " + e.getBrote());
 				}
 				if (j < a.length) {
 					i = CiudadInfectada.size();
 				}
 			}
 		}
+	}
+
+	public String[] getCiuInfo(int NumCiudad) {
+		int a = NumCiudad;
+		String[] info = new String[4];
+
+		for (int i = 0; i < CiudadInfectada.size(); i++) {
+			ciudad_infectada e = CiudadInfectada.get(a);
+			if (i == a) {
+				info[0] = e.getCiudad();
+				if (e.getInfeccion() == 0) {
+					info[1] = String.valueOf(e.getInfeccion() + 1);
+				} else {
+					info[1] = String.valueOf(e.getInfeccion());
+				}
+				info[2] = String.valueOf(e.getBrote());
+				info[3] = e.getVirus();
+			}
+		}
+		return info;
 	}
 
 	public void RestarInfCiu(int NumCiudad) {
@@ -61,6 +85,8 @@ public class busc_ciudad {
 						vac.Alfa = 0;
 					} else {
 						infeccion_actual = e.getInfeccion();
+						System.out.println(CiudadInfectada.get(a));
+						System.out.print("+ " + e.getInfeccion());
 						e.setInfeccion(infeccion_actual - 1);
 					}
 				}
@@ -72,6 +98,8 @@ public class busc_ciudad {
 						vac.Beta = 0;
 					} else {
 						infeccion_actual = e.getInfeccion();
+						System.out.println(CiudadInfectada.get(a));
+						System.out.print("+ " + e.getInfeccion());
 						e.setInfeccion(infeccion_actual - 1);
 					}
 				}
@@ -83,6 +111,8 @@ public class busc_ciudad {
 						vac.Delta = 0;
 					} else {
 						infeccion_actual = e.getInfeccion();
+						System.out.println(CiudadInfectada.get(a));
+						System.out.print("+ " + e.getInfeccion());
 						e.setInfeccion(infeccion_actual - 1);
 					}
 				}
@@ -94,6 +124,8 @@ public class busc_ciudad {
 						vac.Gama = 0;
 					} else {
 						infeccion_actual = e.getInfeccion();
+						System.out.println(CiudadInfectada.get(a));
+						System.out.print("+ " + e.getInfeccion());
 						e.setInfeccion(infeccion_actual - 1);
 					}
 				}
@@ -107,21 +139,33 @@ public class busc_ciudad {
 
 	public static void InfeccionColindantes() {
 
+		String Nciu = "";
+		int numInfeccion = 0;
+
 		GuardarColindantes();
-
+		System.out.println("\n\n InfeccionColindanteeees");
 		for (int i = 0; i < CiudadInfectada.size(); i++) {
-
-			if (CiudadInfectada.equals(NPueblo)) {
-				for (int j = 0; j < CiudadInfectada.size(); j++) {
-					for (int j2 = 0; j2 < partesCiudades.length; j2++) {
-						if (CiudadInfectada.get(j).equals(partesCiudades[j2])) {
-							for (int k = 0; k < CiuInf.length; k++) {
-
+			ciudad_infectada e = CiudadInfectada.get(i);
+			Nciu = e.getCiudad();
+			if (Nciu.equals(NPueblo)) {
+				System.out.println(NPueblo + " se la metioo");
+				for (int j2 = 0; j2 < partesCiudades.length; j2++) {
+					System.out.println("\n\nllego hasta el fondo");
+					System.out.println(partesCiudades[j2]);
+					for (int j = 0; j < CiudadInfectada.size(); j++) {
+						ciudad_infectada a = CiudadInfectada.get(j);
+						if (partesCiudades[j2].equals(a.getCiudad())) {
+							System.out.println("\n\n\n");
+							System.out.println(a.getCiudad() + ", " + a.getInfeccion());
+							numInfeccion = a.getInfeccion();
+							if (numInfeccion != 3) {
+								a.setInfeccion(numInfeccion + 1);
 							}
+							System.out.println(a.getCiudad() + ", " + a.getInfeccion());
 						}
-
 					}
 				}
+
 			}
 		}
 	}
@@ -168,8 +212,8 @@ public class busc_ciudad {
 
 			if (c.getInfeccion() >= 1) {
 				cont += c.getInfeccion();
-				System.out.println(cont);
-				System.out.println(c.getCiudad() + ", " + c.getInfeccion());
+				// System.out.println(cont);
+				// System.out.println(c.getCiudad() + ", " + c.getInfeccion());
 			}
 
 		}
@@ -179,12 +223,12 @@ public class busc_ciudad {
 
 	public static int contarBrotes() {
 		int cont = 0;
-		//System.out.println(" ");
+		// System.out.println(" ");
 
 		for (int i = 0; i < CiudadInfectada.size(); i++) {
 
 			ciudad_infectada c = CiudadInfectada.get(i);
-			
+
 			if (c.getInfeccion() >= 1) {
 				cont += c.getBrote();
 			}
@@ -194,7 +238,7 @@ public class busc_ciudad {
 		return cont;
 	}
 
-	public void GuardarArray() {
+	public static void GuardarArray() {
 
 		// ceramos las variables
 		// CiudadInfectada = new String[50][4];
@@ -227,7 +271,7 @@ public class busc_ciudad {
 					capullo = true;
 				}
 
-				ciudad_infectada InfectarCiudad = new ciudad_infectada(PartesFrase[0], 0, 0, i, PartesFrase[1]);
+				ciudad_infectada InfectarCiudad = new ciudad_infectada(i, PartesFrase[0], 0, 0, PartesFrase[1]);
 
 				CiudadInfectada.add(i, InfectarCiudad);
 
@@ -257,9 +301,9 @@ public class busc_ciudad {
 		}
 
 		for (int i = 0; i < InRonda; i++) {
-			System.out.print((a[i] + 1) + ", ");
+			// System.out.print((a[i] + 1) + ", ");
 		}
-		System.out.println("\n");
+		// System.out.println("\n");
 
 		return a;
 	}
